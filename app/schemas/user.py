@@ -16,11 +16,11 @@ class UserCreate(BaseModel):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "email": "<EMAIL>",
-                "password": "<PASSWORD>",
-                "first_name": "John",
-                "last_name": "Doe",
-                "username": "johndoe"
+                "email": "user@gmail.com",
+                "password": "1234",
+                "first_name": "user",
+                "last_name": "user",
+                "username": "user"
             }
         }
 
