@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.services import PostServices
-from app.schemas import PostCreate, ActionConfirm
+from app.schemas import PostCreate, ActionConfirm, Post, ManyPosts
 from app.utilities import Security, get_db
 from models import User
 
@@ -17,8 +17,7 @@ def create_posts_routes() -> APIRouter:
 
     @router.post('/new', response_model=ActionConfirm, status_code=status.HTTP_201_CREATED)
     async def create_post(
-            post_details: PostCreate,
-            db: Session = Depends(get_db),
+            post_details: PostCreate, db: Session = Depends(get_db),
             current_user: User = Depends(security.get_current_user)
     ):
         user_id = current_user.user_id
@@ -29,8 +28,7 @@ def create_posts_routes() -> APIRouter:
 
     @router.put('/update_post/{post_id}/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
     async def update_post(
-            post_id: int,
-            post_details: PostCreate,
+            post_id: int, post_details: PostCreate,
             db: Session = Depends(get_db),
             current_user: User = Depends(security.get_current_user)
     ):
@@ -39,16 +37,29 @@ def create_posts_routes() -> APIRouter:
         formatted_msg = ActionConfirm(msg=msg)
         return formatted_msg
 
-    @router.delete('/delete_post/{post_id}/', status_code=status.HTTP_200_OK)
-    async def delete_post(post_id: int):
-        pass
+    @router.delete('/delete_post/{post_id}/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    async def delete_post(
+            post_id: int, db: Session = Depends(get_db),
+            current_user: User = Depends(security.get_current_user)
+    ):
+        user_id = current_user.user_id
+        msg = post_services.delete_post(post_id=post_id, user_id=user_id, db=db)
+        formatted_msg = ActionConfirm(msg=msg)
+        return formatted_msg
 
-    @router.get('/get_posts/{post_id}/{user_id}', status_code=status.HTTP_200_OK)
-    async def get_post(post_id: int, current_user: User = Depends(security.get_current_user)):
-        pass
+    @router.get('/', response_model=Post, status_code=status.HTTP_200_OK)
+    async def get_post(
+            post_id: int, db: Session = Depends(get_db), current_user: User = Depends(security.get_current_user)
+    ):
+        user_id = current_user.user_id
+        post = post_services.get_a_post(post_id=post_id, user_id=user_id, db=db)
+        return post
 
-    @router.get('/get_posts/all/{user_id}', status_code=status.HTTP_200_OK)
-    async def get_posts():
-        pass
+    @router.get('/all/', response_model=ManyPosts, status_code=status.HTTP_200_OK)
+    async def get_posts(db: Session = Depends(get_db), current_user: User = Depends(security.get_current_user)):
+        user_id = current_user.user_id
+        posts = post_services.get_all_posts(user_id=user_id, db=db)
+        posts = ManyPosts(posts=posts)
+        return posts
 
     return router
