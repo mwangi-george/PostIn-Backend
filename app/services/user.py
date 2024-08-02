@@ -60,7 +60,7 @@ class UserServices:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password"
             )
-        access_token = security.create_access_token(data={"sub": user.username})
+        access_token = security.create_access_token(data={"sub": user.username}, expires_in=60)
         print(access_token)
         return {"access_token": access_token, "token_type": "bearer"}
 
