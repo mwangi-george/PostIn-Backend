@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException, status
+from datetime import timedelta
 from app.schemas.user import UserCreate
 from models import User
 from app.utilities.security import Security
@@ -60,7 +60,7 @@ class UserServices:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password"
             )
-        access_token = security.create_access_token(data={"sub": user.username}, expires_in=60)
+        access_token = security.create_access_token(data={"sub": user.username}, expires_in=timedelta(minutes=60))
         print(access_token)
         return {"access_token": access_token, "token_type": "bearer"}
 
