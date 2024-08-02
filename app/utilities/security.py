@@ -16,7 +16,7 @@ class Security:
     def __init__(self):
         load_dotenv()
 
-    ACCESS_TOKEN_EXPIRE_MINUTES = 3
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
     ALGORITHM = os.environ.get("ALGORITHM")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 
