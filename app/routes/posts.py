@@ -26,7 +26,7 @@ def create_posts_routes() -> APIRouter:
         formatted_msg = ActionConfirm(msg=msg)
         return formatted_msg
 
-    @router.put('/update_post/{post_id}/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    @router.put('/update_post/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
     async def update_post(
             post_id: int, post_details: PostCreate,
             db: Session = Depends(get_db),
