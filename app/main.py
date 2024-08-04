@@ -9,7 +9,7 @@ def create_app() -> FastAPI:
         title="PostIn API service for users and posts management",
         description="Developed with ❤️ by [George Mwangi](https://github.com/mwangi-george)."
                     " [Source Code](https://github.com/mwangi-george/PostIn)",
-        version="1.0.0"
+        version="1.0.1"
     )
 
     user_router = user_routes()
