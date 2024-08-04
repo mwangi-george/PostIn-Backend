@@ -29,6 +29,11 @@ class Security:
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
 
+    @staticmethod
+    def get_user(username: str, db: Session):
+        db_user = db.query(User).filter(User.username == username).first()
+        return db_user
+
     def create_access_token(self, data, expires_in: timedelta | None = None):
         to_encode = data.copy()
         if expires_in:
@@ -41,7 +46,7 @@ class Security:
         return encoded_jwt
 
     def authenticate_user(self, username: str, password: str, db: Session):
-        user = db.query(User).filter(User.username == username).first()
+        user = self.get_user(username, db)
         if not user:
             return False
         if not self.verify_password(password, user.password):
@@ -60,7 +65,7 @@ class Security:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
-        user = db.query(User).filter(User.username == username).first()
+        user = self.get_user(username, db)
         if not user:
             raise credentials_exception
         return user
