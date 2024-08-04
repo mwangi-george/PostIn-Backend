@@ -7,7 +7,7 @@ class ActionConfirm(BaseModel):
 
 class UserCreate(BaseModel):
     email: EmailStr
-    password: str = Field(..., max_length=16, min_length=4)
+    password: str = Field(..., min_length=4)
     first_name: str
     last_name: str
     username: str
