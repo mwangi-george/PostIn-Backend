@@ -1,10 +1,9 @@
-# This is the main entry point of the application
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from app.routes import user_routes, posts_routes
 
 
 def create_app() -> FastAPI:
+    """Main Application Entry Point """
     server = FastAPI(
         title="PostIn API service for users and posts management",
         description="Developed with ❤️ by [George Mwangi](https://github.com/mwangi-george)."
