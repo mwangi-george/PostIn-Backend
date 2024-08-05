@@ -3,13 +3,16 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.schemas import UserCreate, ActionConfirm, Token
 from app.services import UserServices
-from app.utilities import get_db
+from app.utilities import get_db, RateLimiter
+
+rate_limiter = RateLimiter()
 
 
 def create_user_routes() -> APIRouter:
     router = APIRouter(
         prefix="/users",
         tags=["users"],
+        dependencies=[Depends(rate_limiter.rate_limit)]
     )
 
     user_services = UserServices()

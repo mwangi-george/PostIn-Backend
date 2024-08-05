@@ -2,16 +2,18 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.services import PostServices
 from app.schemas import PostCreate, ActionConfirm, Post, ManyPosts
-from app.utilities import Security, get_db
+from app.utilities import Security, get_db, RateLimiter
 from models import User
 
 security = Security()
+rate_limiter = RateLimiter()
 
 
 def create_posts_routes() -> APIRouter:
     router = APIRouter(
         prefix="/posts",
-        tags=["posts"]
+        tags=["posts"],
+        dependencies=[Depends(rate_limiter.rate_limit)],
     )
     post_services = PostServices()
 
