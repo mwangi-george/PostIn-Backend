@@ -1,1 +1,4 @@
 venv/
+
+# Start a fresh db in the image
+Posts.db
