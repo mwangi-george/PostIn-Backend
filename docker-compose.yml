@@ -1,0 +1,10 @@
+services:
+  postin:
+    build: .
+    ports:
+      - "8000:8080"
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "4500:6379"
