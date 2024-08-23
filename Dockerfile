@@ -12,10 +12,13 @@ WORKDIR postin_backend
 COPY ./ ./
 
 # install the dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create a volume to persist data
+VOLUME ["/app/data"]
 
 # make database migrations
 RUN alembic upgrade head
 
 # App start command
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

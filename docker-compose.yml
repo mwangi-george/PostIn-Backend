@@ -2,9 +2,23 @@ services:
   postin:
     build: .
     ports:
-      - "8000:8080"
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
 
-  redis:
-    image: "redis:alpine"
+  postgres:
+    image: postgres:16.1-alpine
     ports:
-      - "4500:6379"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+
+volumes:
+  pgdb:
